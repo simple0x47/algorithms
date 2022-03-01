@@ -1,9 +1,11 @@
+use std::cmp::max;
+
 pub fn merge_sort(A: &mut [i32]) {
     sort(A, 0, A.len() - 1);
 }
 
 fn sort(A: &mut [i32], start: usize, end: usize) {
-    if end - start > 2 {
+    if end - start > 1 {
         let middle: usize = (start + end) / 2;
 
         sort(A, start, middle);
@@ -22,23 +24,24 @@ fn merge(A: &mut [i32], start: usize, middle: usize, end: usize) {
         return;
     }
 
-    for i in start..(middle + 1) {
-        let j = middle + 1;
+    let left = &A[start..(middle + 1)].to_owned();
+    let right =  &A[(middle + 1)..(end + 1)].to_owned();
 
-        if j > end {
-            break;
+    let mut left_index: usize = 0;
+    let mut right_index: usize = 0;
+
+    for i in start..(end + 1) {
+        let mut value = 0;
+
+        if (right_index >= right.len()) ||
+            ((left_index < left.len()) && (left[left_index] <= right[right_index])) {
+            value = left[left_index];
+            left_index += 1;
+        } else {
+            value = right[right_index];
+            right_index += 1;
         }
 
-        if A[i] > A[j] {
-            push_until(A, i, j, A[j]);
-        }
+        A[i] = value;
     }
-}
-
-fn push_until(A: &mut [i32], to: usize, until: usize, value: i32) {
-    for i in (pos..(until + 1)).rev() {
-        A[i] = A[i - 1];
-    }
-
-    A[to] = value;
 }
